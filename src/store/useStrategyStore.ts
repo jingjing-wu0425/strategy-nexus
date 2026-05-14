@@ -19,7 +19,9 @@ interface StrategyStore {
   setSummary: (id: string, summary: string) => void;
   toggleComplete: (id: string) => void;
   addAIResponse: (id: string, response: AIResponse) => void;
+  removeAIResponse: (missionId: string, responseId: string) => void;
   addChatMessage: (id: string, message: ChatMessage) => void;
+  removeChatMessage: (missionId: string, messageId: string) => void;
   setAILoading: (v: boolean) => void;
   setChatLoading: (v: boolean) => void;
   setProjectName: (name: string) => void;
@@ -83,6 +85,14 @@ export const useStrategyStore = create<StrategyStore>()(
           },
         })),
 
+      removeAIResponse: (missionId, responseId) =>
+        set((s) => ({
+          aiResponses: {
+            ...s.aiResponses,
+            [missionId]: (s.aiResponses[missionId] ?? []).filter((r) => r.id !== responseId),
+          },
+        })),
+
       setAILoading: (v) => set({ isAILoading: v }),
       setChatLoading: (v) => set({ isChatLoading: v }),
 
@@ -91,6 +101,14 @@ export const useStrategyStore = create<StrategyStore>()(
           chatMessages: {
             ...s.chatMessages,
             [id]: [...(s.chatMessages[id] ?? []), message],
+          },
+        })),
+
+      removeChatMessage: (missionId, messageId) =>
+        set((s) => ({
+          chatMessages: {
+            ...s.chatMessages,
+            [missionId]: (s.chatMessages[missionId] ?? []).filter((m) => m.id !== messageId),
           },
         })),
 
