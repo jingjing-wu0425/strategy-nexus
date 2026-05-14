@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { Phase, AIResponse } from '@/types';
+import type { Phase, AIResponse, ChatMessage } from '@/types';
 import { MISSIONS } from '@/lib/constants/missions';
 
 interface StrategyStore {
@@ -9,7 +9,9 @@ interface StrategyStore {
   missionSummaries: Record<string, string>;
   missionComplete: Record<string, boolean>;
   aiResponses: Record<string, AIResponse[]>;
+  chatMessages: Record<string, ChatMessage[]>;
   isAILoading: boolean;
+  isChatLoading: boolean;
   projectName: string;
 
   setActiveMission: (id: string) => void;
@@ -17,7 +19,9 @@ interface StrategyStore {
   setSummary: (id: string, summary: string) => void;
   toggleComplete: (id: string) => void;
   addAIResponse: (id: string, response: AIResponse) => void;
+  addChatMessage: (id: string, message: ChatMessage) => void;
   setAILoading: (v: boolean) => void;
+  setChatLoading: (v: boolean) => void;
   setProjectName: (name: string) => void;
   getPhaseProgress: (phase: Phase) => number;
   exportAllData: () => StrategyExportData;
@@ -46,7 +50,9 @@ export const useStrategyStore = create<StrategyStore>()(
       missionSummaries: {},
       missionComplete: {},
       aiResponses: {},
+      chatMessages: {},
       isAILoading: false,
+      isChatLoading: false,
       projectName: '',
 
       setActiveMission: (id) => set({ activeMissionId: id }),
@@ -78,6 +84,16 @@ export const useStrategyStore = create<StrategyStore>()(
         })),
 
       setAILoading: (v) => set({ isAILoading: v }),
+      setChatLoading: (v) => set({ isChatLoading: v }),
+
+      addChatMessage: (id, message) =>
+        set((s) => ({
+          chatMessages: {
+            ...s.chatMessages,
+            [id]: [...(s.chatMessages[id] ?? []), message],
+          },
+        })),
+
       setProjectName: (name) => set({ projectName: name }),
 
       getPhaseProgress: (phase) => {
@@ -113,7 +129,9 @@ export const useStrategyStore = create<StrategyStore>()(
           missionSummaries: {},
           missionComplete: {},
           aiResponses: {},
+          chatMessages: {},
           isAILoading: false,
+          isChatLoading: false,
           projectName: '',
         }),
     }),
@@ -126,6 +144,7 @@ export const useStrategyStore = create<StrategyStore>()(
         missionSummaries: state.missionSummaries,
         missionComplete: state.missionComplete,
         aiResponses: state.aiResponses,
+        chatMessages: state.chatMessages,
         projectName: state.projectName,
       }),
     }

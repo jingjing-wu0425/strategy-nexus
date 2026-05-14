@@ -1,13 +1,18 @@
 'use client';
 
+import { useState } from 'react';
 import { useStrategyStore } from '@/store/useStrategyStore';
 import { PHASES } from '@/lib/constants/phases';
 import { AIResponsePanel } from '@/components/ai/AIResponsePanel';
+import { ChatPanel } from '@/components/ai/ChatPanel';
 import { ExportButtons } from '@/components/export/ExportButtons';
 
 const emptyResponses: never[] = [];
 
+type Tab = 'scan' | 'chat';
+
 export function TheAside() {
+  const [activeTab, setActiveTab] = useState<Tab>('scan');
   const activeMissionId = useStrategyStore((s) => s.activeMissionId);
   const responses = useStrategyStore((s) => s.aiResponses[activeMissionId]) ?? emptyResponses;
   const isAILoading = useStrategyStore((s) => s.isAILoading);
@@ -43,19 +48,35 @@ export function TheAside() {
 
   return (
     <div className="h-full flex flex-col">
-      {/* Header */}
-      <div className="px-6 py-6 border-b border-glass-border">
-        <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-text-light">
-          Logic Scan
-        </h3>
-        <p className="text-[10px] text-text-light/60 mt-1">
-          AI 战略逻辑审查
-        </p>
+      {/* Tab Header */}
+      <div className="px-6 py-4 border-b border-glass-border">
+        <div className="flex gap-1 bg-white/20 rounded-lg p-0.5">
+          <button
+            onClick={() => setActiveTab('scan')}
+            className={`flex-1 text-[10px] font-bold uppercase tracking-[0.15em] py-1.5 rounded-md transition-all ${
+              activeTab === 'scan'
+                ? 'bg-white/40 text-text-main'
+                : 'text-text-light/60 hover:text-text-light'
+            }`}
+          >
+            Logic Scan
+          </button>
+          <button
+            onClick={() => setActiveTab('chat')}
+            className={`flex-1 text-[10px] font-bold uppercase tracking-[0.15em] py-1.5 rounded-md transition-all ${
+              activeTab === 'chat'
+                ? 'bg-white/40 text-text-main'
+                : 'text-text-light/60 hover:text-text-light'
+            }`}
+          >
+            AI 对话
+          </button>
+        </div>
       </div>
 
-      {/* AI Responses */}
+      {/* Tab Content */}
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-4">
-        {renderAIContent()}
+        {activeTab === 'scan' ? renderAIContent() : <ChatPanel missionId={activeMissionId} />}
       </div>
 
       {/* Phase Progress */}
