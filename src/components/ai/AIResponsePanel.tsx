@@ -106,7 +106,7 @@ function AIResponseCard({ response, missionId, animate }: { response: AIResponse
   );
 }
 
-function InlineChat({ missionId, inputRef }: { missionId: string; inputRef: React.RefObject<HTMLInputElement | null> }) {
+export function InlineChat({ missionId, inputRef }: { missionId: string; inputRef: React.RefObject<HTMLInputElement | null> }) {
   const messages = useStrategyStore((s) => s.chatMessages[missionId] ?? []);
   const isChatLoading = useStrategyStore((s) => s.isChatLoading);
   const addChatMessage = useStrategyStore((s) => s.addChatMessage);
