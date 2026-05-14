@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       model?: string;
     };
 
-    const activeModel = model ?? process.env.AI_MODEL ?? 'glm-4-flash';
+    const activeModel = model ?? process.env.AI_MODEL ?? 'glm-5.1';
     const response = await callZhipu(messages, activeModel);
 
     return NextResponse.json({ response });
