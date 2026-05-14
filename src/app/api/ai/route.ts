@@ -6,7 +6,7 @@ interface Message {
 }
 
 async function callZhipu(messages: Message[], model: string): Promise<string> {
-  const apiKey = process.env.ZHIPU_API_KEY;
+  const apiKey = process.env.ZHIPU_API_KEY?.trim();
   if (!apiKey) throw new Error('ZHIPU_API_KEY not configured');
 
   const res = await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions', {
