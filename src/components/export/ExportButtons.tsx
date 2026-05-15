@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useStrategyStore, type StrategyExportData } from '@/store/useStrategyStore';
 import { PHASES } from '@/lib/constants/phases';
+import { generateHTMLPresentation } from '@/lib/generate-slides';
 
 function generateMarkdown(data: StrategyExportData): string {
   const lines: string[] = [];
@@ -173,6 +174,15 @@ export function ExportButtons() {
     }
   };
 
+  const handleHTML = () => {
+    const data = exportAllData();
+    const html = generateHTMLPresentation(data);
+    const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  };
+
   return (
     <div className="flex gap-2">
       <button
@@ -187,6 +197,12 @@ export function ExportButtons() {
         className="flex-1 text-[10px] font-bold px-3 py-2 rounded-lg bg-deep-sea text-white hover:bg-deep-sea/90 transition-all uppercase tracking-wider disabled:opacity-50"
       >
         {exporting ? '...' : '.pptx'}
+      </button>
+      <button
+        onClick={handleHTML}
+        className="flex-1 text-[10px] font-bold px-3 py-2 rounded-lg bg-gold text-deep-sea hover:bg-gold/90 transition-all uppercase tracking-wider"
+      >
+        HTML
       </button>
     </div>
   );
