@@ -154,6 +154,7 @@ export function InlineChat({ missionId, inputRef }: { missionId: string; inputRe
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          enableSearch: true,
           messages: [
             { role: 'system', content: CHAT_SYSTEM_PROMPT + '\n\n## 当前任务上下文\n' + contextPrompt },
             ...chatHistory,
