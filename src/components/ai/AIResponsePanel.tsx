@@ -6,6 +6,8 @@ import { getMissionById, getPreviousSummaries } from '@/lib/constants/missions';
 import { CHAT_SYSTEM_PROMPT, buildLogicScanPrompt } from '@/lib/ai/prompts';
 import type { AIResponse, ChatMessage } from '@/types';
 
+const emptyChatMessages: ChatMessage[] = [];
+
 interface Props {
   responses: AIResponse[];
   missionId: string;
@@ -107,7 +109,7 @@ function AIResponseCard({ response, missionId, animate }: { response: AIResponse
 }
 
 export function InlineChat({ missionId, inputRef }: { missionId: string; inputRef: React.RefObject<HTMLInputElement | null> }) {
-  const messages = useStrategyStore((s) => s.chatMessages[missionId] ?? []);
+  const messages = useStrategyStore((s) => s.chatMessages[missionId]) ?? emptyChatMessages;
   const isChatLoading = useStrategyStore((s) => s.isChatLoading);
   const addChatMessage = useStrategyStore((s) => s.addChatMessage);
   const removeChatMessage = useStrategyStore((s) => s.removeChatMessage);
